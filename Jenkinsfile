@@ -22,7 +22,7 @@ pipeline {
         stage('Push Image') {
             steps {
                 script {
-                    app .push("https://995966766395.dkr.ecr.us-east-1.amazonaws.com/demo")
+                    app .push("995966766395.dkr.ecr.us-east-1.amazonaws.com/demo")
                 }
             }
         }
