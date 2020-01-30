@@ -1,21 +1,29 @@
 pipeline {
-    agent any
-
+    agent none
     stages {
-        stage('Build') {
+        stage('Build Jar') {
+            agent {
+                docker {
+                    image 'maven:3-alpine'
+                    args '-v $HOME/.m2:/root/.m2'
+                }
+            }
             steps {
-                bat  'docker build -t test-repository .'
+                sh 'mvn clean package -DskipTests'
             }
         }
-        stage('Push image') {
-         steps {
-           withDockerRegistry([url: "https://995966766395.dkr.ecr.us-east-1.amazonaws.com/demo",credentialsId: "ecr:us-east-1:demo-ecr-credentials"]) {
-           bat 'docker push sampleapp:latest'
-               }
-        }
-        stage('Deploy') {
+        stage('Build Image') {
             steps {
-                echo 'Deploying....'
+                script {
+                    app = docker.build("995966766395.dkr.ecr.us-east-1.amazonaws.com/demo")
+                }
+            }
+        }
+        stage('Push Image') {
+            steps {
+                script {
+                    app.push("latest")
+                }
             }
         }
     }
