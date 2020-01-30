@@ -20,7 +20,7 @@ pipeline {
     stage('Docker Push') {
       agent any
       steps {
-        docker.withRegistry('995966766395.dkr.ecr.us-east-1.amazonaws.com/demo', 'ecr:us-east-1:demo-ecr-credentials') {
+        docker.withRegistry('https://995966766395.dkr.ecr.us-east-1.amazonaws.com/demo', 'ecr:us-east-1:demo-ecr-credentials') {
           docker.image('demo').push('latest')
         }
       }
