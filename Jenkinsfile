@@ -20,11 +20,8 @@ pipeline {
     stage('Docker Push') {
       agent any
       steps {
-        withCredentials([usernamePassword(credentialsId: 'docker-hub', passwordVariable: 'dockerHubPassword', usernameVariable: 'dockerHubUser')]) {
-          sh "docker login -u ${env.dockerHubUser} -p ${env.dockerHubPassword}"
-          sh 'docker push girishsajjanar/spring-petclinic1:latest'
-          sh 'docker image pull spring-petclinic1'
-          sh 'docker run -d -p 9191:8080 spring-petclinic1'
+        docker.withRegistry('995966766395.dkr.ecr.us-east-1.amazonaws.com/demo', 'ecr:us-east-1:demo-ecr-credentials') {
+          docker.image('demo').push('latest')
         }
       }
     }
