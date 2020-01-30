@@ -1,0 +1,25 @@
+apiVersion: apps/v1 
+kind: Deployment
+metadata:
+  name: tomcat
+spec:
+  selector:
+    matchLabels:
+      app: petclinic-app
+      tier: tomcat
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app: petclinic-app
+        tier: tomcat
+    spec:
+      containers:
+      - name: tomcat
+        image: tomcat
+        resources:
+          requests:
+            cpu: 100m
+            memory: 100Mi
+        ports:
+        - containerPort: 8080
