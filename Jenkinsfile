@@ -1,31 +1,43 @@
 pipeline {
-  agent none
+  agent any
+
+  tools {
+    maven 'mvn-3.5.2'
+  }
+
   stages {
-    stage('Maven Install') {
-      agent {
-        docker {
-          image 'maven:3.5.0'
-        }
-      }
+    stage('Build') {
       steps {
-        sh 'mvn clean install'
+        sh 'mvn package'
       }
     }
-    stage('Docker Build') {
-      agent any
+    
+    stage('Make Container') {
       steps {
-        sh 'sudo docker build -t jagdeesh123-alt/spring-petclinic1:latest .'
+      sh "docker build -t snscaimito/ledger-service:${env.BUILD_ID} ."
+      sh "docker tag snscaimito/ledger-service:${env.BUILD_ID} snscaimito/ledger-service:latest"
       }
     }
-    stage('Docker Push') {
-      agent any
+    
+    stage('Check Specification') {
       steps {
-        withCredentials([usernamePassword(credentialsId: 'docker-hub', passwordVariable: 'dockerHubPassword', usernameVariable: 'dockerHubUser')]) {
-          sh "sudo docker login -u ${env.dockerHubUser} -p ${env.dockerHubPassword}"
-          sh 'sudo docker push jagdeesh123-alt/spring-petclinic1:latest'
-          sh 'sudo docker image pull spring-petclinic1'
-          sh 'sudo docker run -d -p 9191:8080 spring-petclinic1'
-        }
+        sh "chmod o+w *"
+        sh "docker-compose up --exit-code-from cucumber --build"
+      }
+    }
+  }
+
+  post {
+    always {
+      archive 'target/**/*.war'
+      junit 'target/**/*.xml'
+      cucumber '**/*.json'
+    }
+    success {
+      withCredentials([usernamePassword(credentialsId: 'docker-credentials', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+        sh "docker login -u ${USERNAME} -p ${PASSWORD}"
+        sh "docker push snscaimito/ledger-service:${env.BUILD_ID}"
+        sh "docker push snscaimito/ledger-service:latest"
       }
     }
   }
