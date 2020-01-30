@@ -15,14 +15,14 @@ pipeline {
         stage('Build Image') {
             steps {
                 script {
-                    app = docker.build("https://995966766395.dkr.ecr.us-east-1.amazonaws.com/demo")
+                    app = docker.build("https://995966766395.dkr.ecr.us-east-1.amazonaws.com/demo"/latest)
                 }
             }
         }
         stage('Push Image') {
             steps {
                 script {
-                    app .push("latest")
+                    app .push("https://995966766395.dkr.ecr.us-east-1.amazonaws.com/demo")
                 }
             }
         }
