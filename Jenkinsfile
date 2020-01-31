@@ -20,7 +20,7 @@ pipeline
             {
                 script
                 {
-                    sh("eval \$(aws ecr get-login --no-include-email | sed 's|https://http://995966766395.dkr.ecr.us-west-2.amazonaws.com||')")
+                    sh("eval \$(aws ecr get-login --no-include-email | sed 's|https://github.com/jagadeesh123-alt/demo.git||')")
                     docker.withRegistry(ECRURL, ECRCRED)
                     {
                         docker.image(PROJECT).pull()
