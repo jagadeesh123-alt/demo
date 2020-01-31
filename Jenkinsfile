@@ -4,69 +4,29 @@ pipeline
     {
         buildDiscarder(logRotator(numToKeepStr: '3'))
     }
+ 
     agent any
     environment 
     {
-        VERSION = 'latest'
-        PROJECT = 'payvoo-ecrr'
-        IMAGE = 'payvoo-ecrr:latest'
+        PROJECT = 'tap_sample'
         ECRURL = 'http://995966766395.dkr.ecr.us-west-2.amazonaws.com'
-        ECRCRED = 'ecr:us-west-2:payvoo-ecrr'
+        ECRCRED = 'ecr:us-west-2:payvoo-ecr'
     }
     stages
     {
-        stage('Build preparations')
-        {
-            steps
-            {
-                script 
-                {
-                    // calculate GIT lastest commit short-hash
-                    gitCommitHash = sh(returnStdout: true, script: 'git rev-parse HEAD').trim()
-                    shortCommitHash = gitCommitHash.take(7)
-                    // calculate a sample version tag
-                    VERSION = shortCommitHash
-                    // set the build display name
-                    currentBuild.displayName = "#${BUILD_ID}-${VERSION}"
-                    IMAGE = "$PROJECT:$VERSION"
-                }
-            }
-        }
-        stage('Docker build')
+        stage('Docker image pull')
         {
             steps
             {
                 script
                 {
-                    // Build the docker image using a Dockerfile
-                    docker.build("$IMAGE","payvoo-ecrr/web/995966766395.dkr.ecr.us-west-2.amazonaws.com/payvoo-ecr")
-                }
-            }
-        }
-        stage('Docker push')
-        {
-            steps
-            {
-                script
-                {
-                    // login to ECR - for now it seems that that the ECR Jenkins plugin is not performing the login as expected. I hope it will in the future.
-                    sh("eval \$(aws ecr get-login --no-include-email | sed 's|https://http://995966766395.dkr.ecr.us-west-2.amazonaws.com||')")
-                    // Push the Docker image to ECR
+                    sh("eval \$(aws ecr get-login --no-include-email | sed 's|https://||')")
                     docker.withRegistry(ECRURL, ECRCRED)
                     {
-                        docker.image(IMAGE).push()
+                        docker.image(PROJECT).pull()
                     }
                 }
             }
         }
     }
-    
-    post
-    {
-        always
-        {
-            // make sure that the Docker image is removed
-            sh "docker rmi $IMAGE | true"
-        }
-    }
-} 
+}
