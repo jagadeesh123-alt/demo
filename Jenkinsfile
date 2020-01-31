@@ -15,7 +15,7 @@ pipeline {
         stage('Build Image') {
             steps {
                 script {
-                    sh 'docker build -t 995966766395.dkr.ecr.us-west-2.amazonaws.com/payvoo-ecr:latest .'
+                    sh 'docker build -t 995966766395.dkr.ecr.us-west-2.amazonaws.com/payvoo-ecr:web .'
                 }
             }
         }
