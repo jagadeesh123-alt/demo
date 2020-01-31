@@ -8,8 +8,8 @@ pipeline
     environment 
     {
         VERSION = 'latest'
-        PROJECT = 'tap_sample'
-        IMAGE = 'tap_sample:latest'
+        PROJECT = 'payvoo-ecrr'
+        IMAGE = 'payvoo-ecrr:latest'
         ECRURL = 'http://995966766395.dkr.ecr.us-west-2.amazonaws.com'
         ECRCRED = 'ecr:us-west-2:payvoo-ecrr'
     }
@@ -39,7 +39,7 @@ pipeline
                 script
                 {
                     // Build the docker image using a Dockerfile
-                    docker.build("$IMAGE","web/995966766395.dkr.ecr.us-west-2.amazonaws.com/payvoo-ecr")
+                    docker.build("$IMAGE","payvoo-ecrr/web/995966766395.dkr.ecr.us-west-2.amazonaws.com/payvoo-ecr")
                 }
             }
         }
