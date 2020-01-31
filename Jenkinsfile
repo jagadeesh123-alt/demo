@@ -22,7 +22,7 @@ pipeline {
         stage('Push Image') {
             steps {
                 script {
-                   app=docker.push("latest")
+                   app=docker.push("payvoo-ecr")
                 }
             }
         }
