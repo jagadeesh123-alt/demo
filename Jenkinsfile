@@ -1,16 +1,15 @@
-pipeline {
-  agent none
-  stages {
-    stage('Maven Install') {
-      agent {
-        docker {
-          image 'maven:3.5.0'
-        }
-      }
-      steps {
-        sh 'mvn clean install'
-      }
+try {
+  stage('Clone Repo'){
+    node('master'){
+      checkout([$class: 'GitSCM', branches: [[name: '*/jaga']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[url: 'https://github.com/jagadeesh123-alt/demo.git']]])
     }
+  }
+  stage('Build Maven'){
+    node('master'){
+       sh "mvn clean install"
+    }
+  }
+
     stage('Docker Build') {
       agent any
       steps {
@@ -27,5 +26,4 @@ pipeline {
         }
       }
     }
-  }
 }
