@@ -15,14 +15,14 @@ pipeline {
         stage('Build Image') {
             steps {
                 script {
-                    app = docker.build("petclinic")
+                    app = docker.build("995966766395.dkr.ecr.us-west-2.amazonaws.com/payvoo-ecr")
                 }
             }
         }
         stage('Push Image') {
             steps {
                 script {
-                   app=docker.push("995966766395.dkr.ecr.us-west-2.amazonaws.com/demo/petclinic")
+                   app=docker.push("latest")
                 }
             }
         }
