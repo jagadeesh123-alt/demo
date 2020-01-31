@@ -11,7 +11,6 @@ pipeline {
         sh 'mvn clean install'
       }
     }
-   stage('Build And Push Docker Image') {
         docker.withRegistry('https://995966766395.dkr.ecr.us-west-2.amazonaws.com', 'ecr:us-west-2:access_id') {
            
             //build image
@@ -23,4 +22,4 @@ pipeline {
   }
 
   }
-}
+
