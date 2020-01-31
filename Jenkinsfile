@@ -15,14 +15,15 @@ pipeline {
         stage('Build Image') {
             steps {
                 script {
-                    app = docker.build("995966766395.dkr.ecr.us-west-2.amazonaws.com/payvoo-ecr .")
+                    docker.build('payvoo')
                 }
             }
         }
         stage('Push Image') {
             steps {
+                docker.withRegistry('https://995966766395.dkr.ecr.us-west-2.amazonaws.com', 'ecr:us-west-2:payvoo-ecr-credentials')
                 script {
-                   app=docker.push("payvoo-ecr")
+                   docker.image('payvoo').push('latest')
                 }
             }
         }
