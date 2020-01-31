@@ -15,7 +15,7 @@ pipeline {
         stage('Build Image') {
             steps {
                 script {
-                    app = docker.build("995966766395.dkr.ecr.us-west-2.amazonaws.com/payvoo-ecr")
+                    app = docker.build("995966766395.dkr.ecr.us-west-2.amazonaws.com/payvoo-ecr .")
                 }
             }
         }
