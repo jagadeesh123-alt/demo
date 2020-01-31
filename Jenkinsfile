@@ -1,33 +1,12 @@
-pipeline {
-  agent none
-  stages {
-    stage('Maven Install') {
-      agent {
-        docker {
-          image 'maven:3.5.0'
-        }
-      }
-      steps {
-        sh 'mvn clean install'
-      }
-    }
-    stage('Docker Build') {
-      agent any
-      steps {
-        sh 'docker build -t girishsajjanar/spring-petclinic1:latest .'
-      }
-    }
-    stage('Build And Push Docker Image') {
+stage('Build And Push Docker Image') {
     node('master'){
         docker.withRegistry('https://995966766395.dkr.ecr.us-west-2.amazonaws.com', 'ecr:us-west-2:access_id') {
            
             //build image
-            def customImage = docker.build("995966766395.dkr.ecr.us-west-2.amazonaws.com/payvoo-ecr:latest")
+            def customImage = docker.build("995966766395.dkr.ecr.us-west-2.amazonaws.com/payvoo-ecr:lates")
              
             //push image
             customImage.push()
         }
-      }
     }
   }
-}
