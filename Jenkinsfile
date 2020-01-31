@@ -39,7 +39,7 @@ pipeline
                 script
                 {
                     // Build the docker image using a Dockerfile
-                    docker.build("$IMAGE","examples/pipelines/995966766395.dkr.ecr.us-west-2.amazonaws.com/payvoo-ecr")
+                    docker.build("$IMAGE","web/995966766395.dkr.ecr.us-west-2.amazonaws.com/payvoo-ecr")
                 }
             }
         }
